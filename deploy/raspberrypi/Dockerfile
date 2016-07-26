@@ -1,15 +1,15 @@
 FROM resin/raspberrypi-golang:1.5
 
 RUN apt-get update && \
-    apt-get install -y unzip libusb-1.0
+    apt-get install -y libusb-1.0
 
 RUN go get github.com/HackerLoop/rotonde && \
-    go get github.com/HackerLoop/rotonde-client-go && \
-    go get github.com/HackerLoop/rotonde-rfid-m301 && \
-    go install github.com/HackerLoop/rotonde-rfid-m301 && \
-    mv /go/bin/rotonde-rfid-m301 /usr/local/bin/
+    go get github.com/HackerLoop/rotonde-client-go
 
-RUN rm -rf $GOPATH $GOROOT && \
-    apt-get remove --purge -y unzip libusb-1.0
+ADD . $GOPATH/src/github.com/HackerLoop/rotonde-rfid-m301
+
+RUN go install github.com/HackerLoop/rotonde-rfid-m301
+
+RUN cp $GOPATH/bin/rotonde-rfid-m301 /usr/local/bin/
 
 CMD ["/usr/local/bin/rotonde-rfid-m301"]
