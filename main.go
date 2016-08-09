@@ -28,7 +28,7 @@ func startListening(c chan string, device *hid.Device) {
 
 	fmt.Println("Start listening HID")
 	for {
-		n, err := device.ReadTimeout(b, 20)
+		n, err := device.ReadTimeout(b, -1)
 		if err != nil {
 			panic(err)
 		}
@@ -83,7 +83,7 @@ func main() {
 		return
 	}
 
-	c := make(chan string, 10)
+	c := make(chan string)
 	go startListening(c, device)
 
 	r := client.NewClient("ws://rotonde:4224/")
